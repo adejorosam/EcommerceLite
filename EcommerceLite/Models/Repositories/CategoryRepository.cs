@@ -16,9 +16,7 @@ namespace EcommerceLite.Models.Repositories
 
         public async Task<IEnumerable<Category>> GetAllAsync()
         {
-            return
-                await ecommerceLiteDbContext.Categories
-                .ToListAsync();
+            return await ecommerceLiteDbContext.Categories.ToListAsync();
         }
 
         public async Task<Category> GetAsync(Guid id)

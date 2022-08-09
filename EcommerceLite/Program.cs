@@ -29,7 +29,7 @@ builder.Services.AddDbContext<EcommerceLiteDbContext>();
 var region = builder.Configuration.GetConnectionString("EcommerceLite");
 
 
-//builder.Services.AddScoped<IRegionRepository, RegionRepository>();
+builder.Services.AddScoped<ICategoryRepository, CategoryRepository>();
 
 //builder.Services.AddScoped<IWalkRepository, WalkRepository>();
 

@@ -38,7 +38,7 @@ namespace EcommerceLite.Controllers
 
                 var userDTO = mapper.Map<User>(user);
 
-                return Ok(new { message = "Login successful", user = userDTO, token = token });
+                return Ok(new { message = "Login successful", data = userDTO, token = token });
             }
 
             return BadRequest("Username or Password is invalid");

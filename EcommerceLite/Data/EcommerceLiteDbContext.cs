@@ -21,15 +21,29 @@ namespace EcommerceLite.Data
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
+            //modelBuilder.Entity<Cart_Product>()
+            //    .HasOne(x => x.Cart)
+            //    .WithMany(y => y.Cart_Products)
+            //    .HasForeignKey(x => x.CartId);
+
+            //modelBuilder.Entity<Cart_Product>()
+            //    .HasOne(x => x.Product)
+            //    .WithMany(y => y.Cart_Products)
+            //    .HasForeignKey(x => x.ProductId);
             modelBuilder.Entity<Cart_Product>()
-                .HasOne(x => x.Cart)
-                .WithMany(y => y.CartProducts)
-                .HasForeignKey(x => x.CartId);
+       .HasKey(bc => new { bc.CartId, bc.ProductId });
+            modelBuilder.Entity<Cart_Product>()
+                .HasOne(bc => bc.Cart)
+                .WithMany(b => b.CartProducts)
+                .HasForeignKey(bc => bc.CartId);
+                //.WillCascadeOnDelete(false);
 
             modelBuilder.Entity<Cart_Product>()
-                .HasOne(x => x.Product)
-                .WithMany(y => y.CartProducts)
-                .HasForeignKey(x => x.ProductId);
+                .HasOne(bc => bc.Product)
+                .WithMany(c => c.CartProducts)
+                .HasForeignKey(bc => bc.ProductId);
+                //.WillCascadeOnDelete(false);
+            
         }
 
         public DbSet<User> Users { get; set; }
@@ -40,7 +54,7 @@ namespace EcommerceLite.Data
 
         public DbSet<Product> Products { get; set; }
 
-        public DbSet<Cart_Product> Carts_Products { get; set; }
+        public DbSet<Cart_Product> CartProducts { get; set; }
 
 
 
