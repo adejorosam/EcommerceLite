@@ -5,6 +5,8 @@ namespace EcommerceLite.Models.Repositories
     {
         Task<IEnumerable<Product>> GetAllAsync();
 
+        Task<IEnumerable<Product>> GetProductsByCategoryAsync(Guid categoryId);
+
         Task<Product> GetAsync(Guid id);
 
         Task<Product> AddAsync(Product product);

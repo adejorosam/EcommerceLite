@@ -7,14 +7,16 @@ namespace EcommerceLite.Models.Domain
     {
         public Guid Id { get; set; }
 
-        [Required]
+        //[Required]
         public int Quantity { get; set; }
 
-        [Required]
+        //[Required]
         public double Price { get; set; }
 
-        [Required]
+        //[Required]
         public double TotalPrice { get; set; }
+
+        public Guid UserId { get; set; }
 
 
 

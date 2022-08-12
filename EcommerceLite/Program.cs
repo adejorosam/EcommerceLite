@@ -5,6 +5,8 @@ using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
 using EcommerceLite.Models.Repositories;
+using Microsoft.AspNetCore.Http;
+
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -31,13 +33,15 @@ var region = builder.Configuration.GetConnectionString("EcommerceLite");
 
 builder.Services.AddScoped<ICategoryRepository, CategoryRepository>();
 
-//builder.Services.AddScoped<IWalkRepository, WalkRepository>();
+builder.Services.AddScoped<IProductRepository, ProductRepository>();
 
-//builder.Services.AddScoped<IWalkDifficultyRepository, WalkDifficultyRepository>();
+builder.Services.AddScoped<ICartRepository, CartRepository>();
 
 builder.Services.AddScoped<IUserRepository, UserRepository>();
 
 builder.Services.AddScoped<ITokenHandlerRepository, TokenHandlerRepository>();
+
+
 
 
 builder.Services.AddAutoMapper(typeof(Program).Assembly);
