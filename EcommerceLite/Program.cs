@@ -41,6 +41,7 @@ builder.Services.AddScoped<IUserRepository, UserRepository>();
 
 builder.Services.AddScoped<ITokenHandlerRepository, TokenHandlerRepository>();
 
+//builder.Services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
 
 
 

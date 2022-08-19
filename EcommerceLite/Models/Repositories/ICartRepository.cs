@@ -4,8 +4,6 @@ namespace EcommerceLite.Models.Repositories
 {
     public interface ICartRepository
     {
-        //Task<IEnumerable<Cart>> GetAllAsync();
-
         Task<Cart> GetAsync(Guid id);
 
         Task<Cart> AddAsync(Cart cart);
@@ -13,5 +11,7 @@ namespace EcommerceLite.Models.Repositories
         Task<Cart> DeleteAsync(Guid id);
 
         Task<Cart> UpdateAsync(Guid id, Cart cart);
+
+        Task<IEnumerable<Cart_Product>> GetCartProductAsync(Guid cartId, Guid productId);
     }
 }

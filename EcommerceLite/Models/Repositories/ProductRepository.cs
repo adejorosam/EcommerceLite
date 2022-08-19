@@ -42,7 +42,6 @@ namespace EcommerceLite.Models.Repositories
         public async Task<Product> GetAsync(Guid id)
         {
            
-
             var product = await
                 ecommerceLiteDbContext.Products
                 .Include(x => x.Category)

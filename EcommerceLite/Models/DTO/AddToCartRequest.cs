@@ -1,4 +1,6 @@
 ﻿using System;
+using System.ComponentModel.DataAnnotations;
+
 namespace EcommerceLite.Models.DTO
 {
     public class AddToCartRequest
@@ -7,13 +9,13 @@ namespace EcommerceLite.Models.DTO
 
         public int Quantity { get; set; }
 
+        [Required]
         public double Price { get; set; }
 
-        public double TotalPrice { get; set; }
-
+        [Required]
         public Guid ProductId { get; set; }
 
-        public Guid UserId { get; set; }
+
 
     }
 }
