@@ -39,7 +39,7 @@ namespace EcommerceLite.Controllers
             var product = await productRepository.GetAsync(addToCartRequest.ProductId);
 
             //int quantity = addToCartRequest.Quantity;
-            //check if cartId is in the request
+            //check if cart id was supplied
             if (string.IsNullOrEmpty(addToCartRequest.CartId.ToString()))
             {
                 int quantity = 0;
@@ -55,19 +55,15 @@ namespace EcommerceLite.Controllers
                     quantity = addToCartRequest.Quantity;
                     totalPrice = quantity * product.SellingPrice;
                 }
-                cart = new Cart()
-                {
 
-                    Quantity = quantity,
-                    Price = addToCartRequest.Price,
-                    TotalPrice = totalPrice,
-                    //UserId = Guid.Parse(HttpContext.User.FindFirstValue("Id")),
-                    UserId = Guid.Parse("cf183488-7e41-443b-9aaf-cb4a9958a15e")
-                };
+                cart.Id = new Guid();
+                cart.Quantity = quantity;
+                cart.Price = addToCartRequest.Price;
+                cart.TotalPrice = totalPrice;
+                cart.UserId = Guid.Parse(HttpContext.User.FindFirstValue("Id"));
+                //cart.UserId = Guid.Parse("cf183488-7e41-443b-9aaf-cb4a9958a15e");
 
-                await ecommerceLiteDbContext.AddAsync(cart);
-                await ecommerceLiteDbContext.SaveChangesAsync();
-
+                cart = await cartRepository.AddAsync(cart);
 
                 var cartProduct = new Cart_Product()
                 {
@@ -75,43 +71,44 @@ namespace EcommerceLite.Controllers
                     CartId = cart.Id
                 };
 
-                await ecommerceLiteDbContext.AddAsync(cartProduct);
-                await ecommerceLiteDbContext.SaveChangesAsync();
-                
+                await cartRepository.AddCartProductAsync(cartProduct);
 
             }
-            //else
-            //{
-            //     var cartProduct = await cartRepository.GetCartProductAsync(addToCartRequest.CartId, addToCartRequest.ProductId);
-            //     cart = await cartRepository.GetAsync(addToCartRequest.CartId);
-            //     if(cart == null)
-            //     {
-            //        ModelState.AddModelError(nameof(addToCartRequest.CartId),
-            //            $"{nameof(addToCartRequest.CartId)} is invalid");
-            //    }
-            //    else if(cartProduct != null)
-            //    {
-            //        int quantity = 0;
-            //        double totalPrice = 0.0;
+            else
+            {
+                var cartProduct = await cartRepository.GetCartProductAsync(addToCartRequest.CartId, addToCartRequest.ProductId);
+                cart = await cartRepository.GetAsync(addToCartRequest.CartId);
+                //return Ok(new { message = "Data successfully retro!", data = cart.Quantity });
 
-            //        if (string.IsNullOrEmpty(addToCartRequest.Quantity.ToString()))
-            //        {
-            //             quantity = cart.Quantity + 1;
-            //             totalPrice = quantity * product.SellingPrice;
-            //        }
-            //        else
-            //        {
-            //            quantity = addToCartRequest.Quantity;
-            //            totalPrice = quantity * product.SellingPrice;
-            //        }
+                if (cart == null)
+                {
+                    ModelState.AddModelError(nameof(addToCartRequest.CartId),
+                        $"{nameof(addToCartRequest.CartId)} is invalid");
+                }
+                //Check if 
+                else if (cartProduct != null)
+                {
+                    int quantity = 0;
+                    double totalPrice = 0.0;
+
+                    if (string.IsNullOrEmpty(addToCartRequest.Quantity.ToString()))
+                    {
+                        quantity = addToCartRequest.Quantity;
+                        totalPrice = quantity * product.SellingPrice;
+                    }
+                    else
+                    {
+                        quantity = 1;
+                        totalPrice = quantity * product.SellingPrice;
+                    }
 
 
-            //        cart.Quantity = quantity;
-            //        cart.TotalPrice = totalPrice;
-            //        await ecommerceLiteDbContext.SaveChangesAsync();
+                    cart.Quantity = quantity;
+                    cart.TotalPrice = totalPrice;
+                    cart = await cartRepository.UpdateAsync(addToCartRequest.CartId, cart);
 
-            //    }
-            //}
+                }
+            }
             return Ok(cart);
 
             //return CreatedAtAction(nameof(GetProductAsync), new { id = walkDTO.Id }, walkDTO);
@@ -128,7 +125,7 @@ namespace EcommerceLite.Controllers
                         $"{nameof(addToCartRequest.ProductId)} is invalid");
             }
 
-            if(product.AvailableQuantity < 1)
+            if (product.AvailableQuantity < 1)
             {
                 ModelState.AddModelError(nameof(addToCartRequest.ProductId), $"{nameof(product.Name)} is out of stock");
             }

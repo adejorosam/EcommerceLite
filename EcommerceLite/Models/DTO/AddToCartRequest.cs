@@ -5,7 +5,7 @@ namespace EcommerceLite.Models.DTO
 {
     public class AddToCartRequest
     {
-        public Guid CartId { get; set; }
+        public Guid? CartId { get; set; }
 
         public int Quantity { get; set; }
 
@@ -14,8 +14,6 @@ namespace EcommerceLite.Models.DTO
 
         [Required]
         public Guid ProductId { get; set; }
-
-
 
     }
 }

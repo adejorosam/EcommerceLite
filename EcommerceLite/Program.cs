@@ -6,7 +6,7 @@ using Microsoft.IdentityModel.Tokens;
 using System.Text;
 using EcommerceLite.Models.Repositories;
 using Microsoft.AspNetCore.Http;
-
+using System.Text.Json.Serialization;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -43,7 +43,11 @@ builder.Services.AddScoped<ITokenHandlerRepository, TokenHandlerRepository>();
 
 //builder.Services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
 
-
+builder.Services.AddControllers().AddJsonOptions(options =>
+{
+    options.JsonSerializerOptions.ReferenceHandler = ReferenceHandler.IgnoreCycles;
+    options.JsonSerializerOptions.WriteIndented = true;
+});
 
 builder.Services.AddAutoMapper(typeof(Program).Assembly);
 

@@ -15,9 +15,19 @@ namespace EcommerceLite.Models.Repositories
             this.ecommerceLiteDbContext = ecommerceLiteDbContext;
         }
 
+        public async Task<Cart_Product> AddCartProductAsync(Cart_Product cartProduct)
+        {
+            await ecommerceLiteDbContext.AddAsync(cartProduct);
+
+            await ecommerceLiteDbContext.SaveChangesAsync();
+
+            return cartProduct;
+        }
+
+
         public async Task<Cart> AddAsync(Cart cart)
         {
-            cart.Id = Guid.NewGuid();
+            //cart.Id = Guid.NewGuid();
 
             await ecommerceLiteDbContext.AddAsync(cart);
 
@@ -27,28 +37,27 @@ namespace EcommerceLite.Models.Repositories
 
         }
 
-        public async Task<Cart> UpdateAsync(Guid id, Cart cart)
+        public async Task<Cart> UpdateAsync(Guid? id, Cart cart)
         {
-            //var existingCart = await ecommerceLiteDbContext.Carts.FindAsync(id);
+            var existingCart = await ecommerceLiteDbContext.Carts.FindAsync(id);
 
-            //if (existingCart == null)
-            //{
-            //    return null;
-            //}
+            if (existingCart == null)
+            {
+                return null;
+            }
 
-            //existingCart. = cart.Description;
-            //existingCart. = category.Name;
+            existingCart.Quantity = cart.Quantity;
+            existingCart.TotalPrice = cart.TotalPrice;
 
-            //await ecommerceLiteDbContext.SaveChangesAsync();
+            await ecommerceLiteDbContext.SaveChangesAsync();
 
-            //return existingCart;
-            throw new NotImplementedException();
+            return existingCart;
 
         }
 
        
 
-        public async Task<Cart> GetAsync(Guid id)
+        public async Task<Cart> GetAsync(Guid? id)
         {
 
             var cart = await ecommerceLiteDbContext.Carts.FirstOrDefaultAsync(x => x.Id == id);
@@ -63,7 +72,7 @@ namespace EcommerceLite.Models.Repositories
         //    .Where(c => c.Invoices.Any(i => i.Date >= fromDate))
         //    .FirstOrDefault();
 
-        public async Task<IEnumerable<Cart_Product>> GetCartProductAsync(Guid cartId, Guid productId)
+        public async Task<IEnumerable<Cart_Product>> GetCartProductAsync(Guid? cartId, Guid productId)
         {
 
             var cartProduct = await ecommerceLiteDbContext.CartProducts

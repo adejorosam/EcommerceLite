@@ -12,4 +12,3 @@ namespace EcommerceLite.Models.Domain
         public bool isActive { get; set; }
     }
 }
-
