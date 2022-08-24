@@ -15,6 +15,11 @@ namespace EcommerceLite.Models.Repositories
             this.ecommerceLiteDbContext = ecommerceLiteDbContext;
         }
 
+        public async Task<IEnumerable<Cart>> GetAllAsync()
+        {
+            return await ecommerceLiteDbContext.Carts.ToListAsync();
+        }
+
         public async Task<Cart_Product> AddCartProductAsync(Cart_Product cartProduct)
         {
             await ecommerceLiteDbContext.AddAsync(cartProduct);
@@ -27,7 +32,7 @@ namespace EcommerceLite.Models.Repositories
 
         public async Task<Cart> AddAsync(Cart cart)
         {
-            //cart.Id = Guid.NewGuid();
+            cart.Id = Guid.NewGuid();
 
             await ecommerceLiteDbContext.AddAsync(cart);
 
@@ -65,12 +70,7 @@ namespace EcommerceLite.Models.Repositories
             return cart;
 
         }
-        //var fromDate = DateTime.Now.AddDays(-7);
 
-        //var customer = context.Customers.Where(c => c.CustomerID == 1)
-        //    .Include(c => c.Invoices)
-        //    .Where(c => c.Invoices.Any(i => i.Date >= fromDate))
-        //    .FirstOrDefault();
 
         public async Task<IEnumerable<Cart_Product>> GetCartProductAsync(Guid? cartId, Guid productId)
         {
@@ -79,7 +79,6 @@ namespace EcommerceLite.Models.Repositories
                 .Where(c => c.CartId == cartId)
                 .Where(d => d.ProductId == productId)
                 .ToListAsync();
-                //FirstOrDefaultAsync(x => x.Id == id);
 
             return cartProduct;
 

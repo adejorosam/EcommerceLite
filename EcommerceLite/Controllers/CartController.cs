@@ -25,6 +25,38 @@ namespace EcommerceLite.Controllers
             this.mapper = mapper;
         }
 
+        [HttpGet]
+        [Route("{id:guid}")]
+        [ActionName("GetCartAsync")]
+        public async Task<IActionResult> GetCartAsync(Guid id)
+        {
+            var cart = await cartRepository.GetAsync(id);
+
+            if (cart == null)
+            {
+                return NotFound();
+            }
+
+            return Ok(cart);
+        }
+
+        [HttpDelete]
+        [Route("{id:guid}")]
+        public async Task<IActionResult> DeleteCartAsync(Guid id)
+        {
+            //Get cart from DB
+            var cart = await cartRepository.DeleteAsync(id);
+
+            //If null, not found
+            if (cart == null)
+            {
+                return NotFound();
+            }
+
+            //return Ok response
+            return Ok(cart);
+        }
+
         //[Authorize]
         [HttpPost]
         public async Task<IActionResult> AddToCartAsync([FromBody] Models.DTO.AddToCartRequest addToCartRequest)
@@ -38,7 +70,6 @@ namespace EcommerceLite.Controllers
             var cart = new Cart();
             var product = await productRepository.GetAsync(addToCartRequest.ProductId);
 
-            //int quantity = addToCartRequest.Quantity;
             //check if cart id was supplied
             if (string.IsNullOrEmpty(addToCartRequest.CartId.ToString()))
             {
@@ -56,7 +87,6 @@ namespace EcommerceLite.Controllers
                     totalPrice = quantity * product.SellingPrice;
                 }
 
-                cart.Id = new Guid();
                 cart.Quantity = quantity;
                 cart.Price = addToCartRequest.Price;
                 cart.TotalPrice = totalPrice;
@@ -78,14 +108,12 @@ namespace EcommerceLite.Controllers
             {
                 var cartProduct = await cartRepository.GetCartProductAsync(addToCartRequest.CartId, addToCartRequest.ProductId);
                 cart = await cartRepository.GetAsync(addToCartRequest.CartId);
-                //return Ok(new { message = "Data successfully retro!", data = cart.Quantity });
 
                 if (cart == null)
                 {
                     ModelState.AddModelError(nameof(addToCartRequest.CartId),
                         $"{nameof(addToCartRequest.CartId)} is invalid");
                 }
-                //Check if 
                 else if (cartProduct != null)
                 {
                     int quantity = 0;
